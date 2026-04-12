@@ -57,6 +57,7 @@
 /* --- A4 Paper Container --- */
 .paper-frame-dynamic {
   width: 210mm;
+  max-width: 100%;
   min-height: 297mm;
   height: auto;
   background: #fff;
@@ -65,8 +66,9 @@
 }
 
 .paper-content {
-  width: 210mm;
-  height: 297mm;
+  width: 100%;
+  min-height: 297mm;
+  height: auto;
   background: #fff;
   position: relative;
   overflow: hidden;
@@ -135,7 +137,7 @@
 
 .personal-layout { display: grid; grid-template-columns: 1fr auto; gap: 20px; }
 .form-grid { display: grid; gap: 8px; }
-.form-row { display: flex; align-items: baseline; gap: 10px; }
+.form-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 
 .label { font-size: 0.75rem; font-weight: 700; color: #203a43; white-space: nowrap; }
 .form-input {
@@ -162,7 +164,7 @@
   overflow: hidden;
 }
 
-.choice-row { display: flex; align-items: center; gap: 15px; margin: 2px 0; }
+.choice-row { display: flex; align-items: center; gap: 15px; margin: 2px 0; flex-wrap: wrap; }
 .choice-item { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 500; color: #334155; }
 
 .form-textarea {
@@ -272,17 +274,75 @@
     padding: 12px;
   }
 
-  /* Allow form to scroll sideways without squishing A4 aspect ratio */
   .form-main-area {
-    padding: 20px 10px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    align-items: flex-start;
-    justify-content: flex-start; 
+    padding: 15px 5px;
   }
 
   .paper-frame-dynamic {
-    flex: 0 0 210mm;
-    margin: 0 auto;
+    min-height: auto;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .paper-content {
+    min-height: auto;
+    height: auto;
+  }
+
+  .paperHeader {
+    grid-template-columns: 45px 1fr 45px;
+    gap: 8px;
+    padding: 12px 10px;
+  }
+
+  .paperHeader .logo-wrap { width: 45px; height: 45px; }
+  .paperHeaderTitle h1 { font-size: 0.8rem; }
+  .paperHeaderTitle p { font-size: 0.55rem; letter-spacing: 0.05em; }
+
+  .paperBody {
+    padding: 15px 12px;
+  }
+
+  /* Make inputs stack cleanly on mobile */
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 8px 10px;
+    background: #f8fafc;
+  }
+
+  .label {
+    margin-left: 0 !important;
+    margin-top: 5px;
+  }
+
+  .choice-row {
+    margin-left: 0 !important;
+  }
+
+  .personal-layout {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .photo-box {
+    margin: 0 auto 10px auto;
+    grid-row: 1; /* Move photo to the top in mobile layout */
+  }
+
+  .signature-area {
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    padding-right: 0;
   }
 }

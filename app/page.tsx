@@ -100,10 +100,11 @@ export default function HomePage() {
     if (!form.id.trim()) return "Please enter Member ID.";
     if (!form.father.trim()) return "Please enter Father's Name.";
     if (!form.mother.trim()) return "Please enter Mother's Name.";
-    if (!form.dob.trim()) return "Please enter Date of Birth.";
+    if (!form.dob.trim()) return "Please enter a valid Date of Birth.";
     if (!form.gender) return "Please select Gender.";
     if (!photo) return "Please upload a Member Photo.";
-    if (!form.phone.trim()) return "Please enter Phone Number.";
+    if (!form.phone.trim().match(/^[0-9+\-\s()]{10,15}$/)) return "Please enter a valid Phone Number.";
+    if (!form.email.trim() || !/^\S+@\S+\.\S+$/.test(form.email)) return "Please enter a valid Email Address.";
     if (!form.presentAddress.trim()) return "Please enter Present Address.";
     if (!form.permanentAddress.trim()) return "Please enter Permanent Address.";
     if (!form.institution.trim()) return "Please enter Current Institution.";
@@ -126,6 +127,22 @@ export default function HomePage() {
     // Clone the form for preview
     const clone = formRef.current.cloneNode(true) as HTMLDivElement;
     
+    // Sync input values (cloneNode doesn't copy current JS state of inputs)
+    const originalInputs = formRef.current.querySelectorAll('input, textarea');
+    const clonedInputs = clone.querySelectorAll('input, textarea');
+    originalInputs.forEach((orig, index) => {
+      const cloned = clonedInputs[index] as HTMLInputElement | HTMLTextAreaElement;
+      if (orig instanceof HTMLInputElement) {
+        if (orig.type === 'checkbox' || orig.type === 'radio') {
+          if (orig.checked) cloned.setAttribute('checked', 'true');
+        } else {
+          cloned.setAttribute('value', orig.value);
+        }
+      } else if (orig instanceof HTMLTextAreaElement) {
+        cloned.textContent = orig.value;
+      }
+    });
+
     // Inject Auto-Date for signature
     const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const sigDateDiv = clone.querySelector('.sigBlock:last-child .sigLine');
@@ -287,7 +304,7 @@ export default function HomePage() {
                     </div>
                     <div className="form-row">
                       <span className="label">Date of Birth:</span>
-                      <input className="form-input" style={{ maxWidth: 140 }} value={form.dob} onChange={(e) => update("dob", e.target.value)} placeholder="DD / MM / YYYY" />
+                      <input className="form-input" type="date" style={{ maxWidth: 140 }} value={form.dob} onChange={(e) => update("dob", e.target.value)} />
                       <div className="choice-row" style={{ marginLeft: 20 }}>
                         <span className="label">Gender:</span>
                         <label className="choice-item"><input type="radio" name="gender" checked={form.gender === "male"} onChange={() => update("gender", "male")} /> Male</label>
@@ -305,8 +322,8 @@ export default function HomePage() {
               <div className="section">
                 <h3 className="sectionTitle">2. Contact Information</h3>
                 <div className="form-grid">
-                  <div className="form-row"><span className="label">Phone:</span><input className="form-input" value={form.phone} onChange={(e) => update("phone", e.target.value)} /></div>
-                  <div className="form-row"><span className="label">Email:</span><input className="form-input" value={form.email} onChange={(e) => update("email", e.target.value)} /></div>
+                  <div className="form-row"><span className="label">Phone:</span><input className="form-input" type="tel" value={form.phone} onChange={(e) => update("phone", e.target.value)} /></div>
+                  <div className="form-row"><span className="label">Email:</span><input className="form-input" type="email" value={form.email} onChange={(e) => update("email", e.target.value)} /></div>
                   <div className="form-row"><span className="label">Present Address:</span><input className="form-input" value={form.presentAddress} onChange={(e) => update("presentAddress", e.target.value)} /></div>
                   <div className="form-row"><span className="label">Permanent Address:</span><input className="form-input" value={form.permanentAddress} onChange={(e) => update("permanentAddress", e.target.value)} /></div>
                 </div>
