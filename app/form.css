@@ -137,7 +137,7 @@
 
 .personal-layout { display: grid; grid-template-columns: 1fr auto; gap: 20px; }
 .form-grid { display: grid; gap: 8px; }
-.form-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.form-row { display: flex; align-items: baseline; gap: 10px; }
 
 .label { font-size: 0.75rem; font-weight: 700; color: #203a43; white-space: nowrap; }
 .form-input {
