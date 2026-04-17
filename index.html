@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nextgen Youth Club – Member Join Form</title>
+  <meta name="description" content="Nextgen Youth Club Uttara BD-0103 — Digital General Member Join Form. Fill online and download as PDF."/>
+  <link rel="icon" type="image/png" href="public/logo.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet"/>
+
+  <style>
+  /* =====================================================
+     RESET & TOKENS
+  ===================================================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:       #0f2d45;
+    --navy-mid:   #16496e;
+    --navy-light: #1f6090;
+    --gold:       #e8c44a;
+    --gold-lt:    #f5d870;
+    --white:      #ffffff;
+    --text:       #1a1a1a;
+    --line:       #888888;
+    --section-bg: #1a5276;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(160deg, #061824 0%, #0f3150 45%, #061824 100%);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* =====================================================
+     SITE HEADER
+  ===================================================== */
+  .site-header {
+    background: rgba(6, 24, 36, 0.96);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 2px solid var(--gold);
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+
+  /* Logo container – used by JS SVG injector */
+  .logo-circle {
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2.5px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--navy-mid);
+  }
+  .logo-circle svg { display: block; }
+
+  .hdr-logo { width: 52px; height: 52px; }
+  .hdr-logo svg { width: 52px; height: 52px; }
+
+  .site-brand { flex: 1; }
+  .site-brand h1 {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: 1.2px;
+    line-height: 1.25;
+  }
+  .site-brand p {
+    font-size: 0.72rem;
+    color: var(--gold);
+    margin-top: 2px;
+    letter-spacing: 0.4px;
+  }
+
+  .hdr-actions { display: flex; gap: 8px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    white-space: nowrap;
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+    color: var(--navy);
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(232,196,74,.45); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--gold);
+    border: 1.5px solid var(--gold);
+  }
+  .btn-ghost:hover { background: rgba(232,196,74,.12); transform: translateY(-2px); }
+
+  /* =====================================================
+     MAIN WRAPPER
+  ===================================================== */
+  .main {
+    padding: 28px 16px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+
+  /* =====================================================
+     PHOTO UPLOAD PANEL
+  ===================================================== */
+  .upload-panel {
+    width: 210mm;
+    max-width: 100%;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(232,196,74,0.28);
+    border-radius: 14px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .upload-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold);
+    white-space: nowrap;
+    letter-spacing: 0.4px;
+  }
+
+  .upload-preview {
+    width: 84px;
+    height: 100px;
+    border: 2px dashed var(--gold);
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
+    background: rgba(255,255,255,0.04);
+    position: relative;
+  }
+  .upload-preview:hover { border-color: var(--gold-lt); }
+  .upload-preview img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: none;
+  }
+  .upload-placeholder {
+    font-size: 0.68rem;
+    color: var(--gold);
+    text-align: center;
+    line-height: 1.5;
+    padding: 6px;
+  }
+
+  .upload-info {
+    flex: 1;
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.68);
+    line-height: 1.7;
+  }
+  .upload-info strong { color: var(--gold-lt); }
+
+  .btn-choose {
+    flex-shrink: 0;
+    padding: 9px 20px;
+    background: var(--navy-mid);
+    color: var(--white);
+    border: 1.5px solid var(--gold);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-choose:hover { background: var(--navy-light); transform: translateY(-1px); }
+
+  #photoInput { display: none; }
+
+  /* =====================================================
+     A4 PAPER
+  ===================================================== */
+  .a4 {
+    width: 210mm;
+    min-height: 297mm;
+    background: #ffffff;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.55);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;   /* for watermark */
+  }
+
+  /* ── WATERMARK ── */
+  .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 310px;
+    height: 310px;
+    opacity: 0.065;
+    pointer-events: none;
+    z-index: 0;
+    filter: grayscale(20%) saturate(0.8);
+  }
+  .watermark svg { width: 310px; height: 310px; }
+
+  /* all form content sits above watermark */
+  .form-header, .form-body { position: relative; z-index: 1; }
+
+  /* ── FORM HEADER ── */
+  .form-header {
+    background: var(--section-bg);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .fhdr-logo { width: 62px; height: 62px; }
+  .fhdr-logo svg { width: 62px; height: 62px; }
+
+  .fhdr-text { flex: 1; text-align: center; }
+  .fhdr-text .club-name {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 1.4px;
+    line-height: 1.15;
+  }
+  .fhdr-text .form-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2.5px;
+    margin-top: 4px;
+  }
+
+  /* ── FORM BODY ── */
+  .form-body {
+    padding: 12px 16px 16px;
+  }
+
+  /* Section header bar */
+  .sec {
+    background: var(--section-bg);
+    color: #fff;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin: 11px 0 7px;
+  }
+
+  /* ── Field rows ── */
+  .row {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 7px;
+  }
+  .lbl {
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    min-width: fit-content;
+  }
+  .inp {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.73rem;
+    font-family: 'Roboto', sans-serif;
+    padding: 1px 3px;
+    background: transparent;
+    color: var(--text);
+    outline: none;
+  }
+  .inp:focus { border-bottom-color: var(--section-bg); }
+
+  .inp-sm { max-width: 120px; }
+  .inp-md { max-width: 160px; }
+  .inp-xs { max-width: 80px; }
+
+  /* ── Personal info layout (fields + photo) ── */
+  .personal-wrap {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0;
+    align-items: start;
+  }
+  .personal-fields { padding-right: 10px; }
+
+  /* Photo slot on form */
+  .photo-slot {
+    width: 88px;
+    height: 106px;
+    border: 1.5px solid #999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    color: #888;
+    text-align: center;
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: border-color 0.2s;
+  }
+  .photo-slot:hover { border-color: var(--section-bg); }
+  .photo-slot img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: none;
+  }
+  .photo-slot-txt { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+
+  /* ── Gender / checkbox row ── */
+  .chk-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 7px;
+  }
+  .chk-opt {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.73rem;
+    cursor: pointer;
+  }
+  .chk-opt input[type="checkbox"] {
+    width: 11px; height: 11px;
+    cursor: pointer;
+    accent-color: var(--section-bg);
+  }
+
+  /* ── Textarea ── */
+  .textarea-wrap { margin-bottom: 7px; }
+  .textarea-wrap .lbl { display: block; margin-bottom: 2px; font-size: 0.73rem; }
+  .blank-line {
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid var(--line);
+    min-height: 17px;
+    margin-bottom: 5px;
+  }
+  .inp-area {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.73rem;
+    font-family: 'Roboto', sans-serif;
+    padding: 1px 3px;
+    background: transparent;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    line-height: 1.7;
+    display: block;
+  }
+  .inp-area:focus { border-bottom-color: var(--section-bg); }
+
+  /* ── Yes/No inline ── */
+  .yn-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .yn-row .lbl { font-size: 0.73rem; }
+  .yn-opts { display: flex; gap: 14px; }
+
+  /* ── Interest checkboxes grid ── */
+  .interest-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: 4px 0 7px;
+  }
+  .others-inp {
+    border: none;
+    border-bottom: 1px solid var(--line);
+    width: 68px;
+    font-size: 0.7rem;
+    outline: none;
+    background: transparent;
+    padding: 0 2px;
+  }
+
+  /* ── Terms box ── */
+  .terms-box {
+    border: 1px dashed #bbb;
+    padding: 7px 11px;
+    margin-top: 10px;
+  }
+  .terms-title {
+    font-size: 0.73rem;
+    font-weight: 700;
+    color: var(--section-bg);
+    text-decoration: underline;
+    margin-bottom: 5px;
+  }
+  .terms-list {
+    padding-left: 14px;
+    font-size: 0.68rem;
+    color: #333;
+    line-height: 1.85;
+  }
+
+  /* ── Signature row ── */
+  .sig-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 44px;
+    margin-top: 12px;
+  }
+  .sig-field { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .sig-line { border-bottom: 1px solid #777; min-height: 22px; }
+  .sig-label { font-size: 0.65rem; color: #555; }
+
+  /* =====================================================
+     PRINT / PDF STYLES
+  ===================================================== */
+  @media print {
+    body { background: white !important; }
+    .site-header, .upload-panel, .hdr-actions { display: none !important; }
+    .main { padding: 0; }
+    .a4 {
+      width: 210mm;
+      min-height: 297mm;
+      box-shadow: none;
+      border-radius: 0;
+    }
+  }
+
+  /* =====================================================
+     RESPONSIVE
+  ===================================================== */
+  @media (max-width: 800px) {
+    .a4, .upload-panel { width: 100%; }
+    .fhdr-text .club-name { font-size: 0.9rem; }
+    .fhdr-text .form-title { font-size: 0.75rem; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ SITE HEADER ══════════ -->
+<header class="site-header">
+  <div class="logo-circle hdr-logo" id="hdrLogo" title="Nextgen Youth Club"></div>
+
+  <div class="site-brand">
+    <h1>NEXTGEN YOUTH CLUB , UTTARA · BD-0103</h1>
+    <p>General Member Join Form &mdash; Fill online &amp; Download PDF</p>
+  </div>
+
+  <div class="hdr-actions">
+    <button class="btn btn-ghost" id="resetBtn">Reset</button>
+    <button class="btn btn-gold" id="pdfBtn">Preview &amp; Download PDF</button>
+  </div>
+</header>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main">
+
+  <!-- ── PHOTO UPLOAD PANEL ── -->
+  <div class="upload-panel">
+    <div class="upload-label">Photo Upload</div>
+
+    <div class="upload-preview" id="sidePreview" onclick="openPhoto()">
+      <div class="upload-placeholder" id="sidePlaceholder">Click to<br/>upload<br/>photo</div>
+      <img id="sideImg" alt="Preview"/>
+    </div>
+
+    <div class="upload-info">
+      <strong>Passport size</strong> ছবি আপলোড করো<br/>
+      ✅ ছবি স্বয়ংক্রিয়ভাবে form-এর জায়গায় fit হবে<br/>
+      ✅ মুখ স্পষ্ট, সামনে দিকে তাকানো ছবি দাও<br/>
+      ✅ JPG, PNG অথবা WEBP ফরম্যাট
+    </div>
+
+    <button class="btn-choose" onclick="openPhoto()">Choose Photo</button>
+    <input type="file" id="photoInput" accept="image/*" onchange="handlePhoto(event)"/>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       A4 PAPER
+  ══════════════════════════════════════════════ -->
+  <div class="a4" id="formPaper">
+
+    <!-- WATERMARK (logo translucent, center) -->
+    <div class="watermark" id="watermark" aria-hidden="true"></div>
+
+    <!-- ── FORM HEADER ── -->
+    <div class="form-header">
+      <div class="logo-circle fhdr-logo" id="fhdrLogoL"></div>
+      <div class="fhdr-text">
+        <div class="club-name">NEXTGEN YOUTH CLUB UTTARA-BD-0103</div>
+        <div class="form-title">GENERAL MEMBER JOIN FORM</div>
+      </div>
+      <div class="logo-circle fhdr-logo" id="fhdrLogoR"></div>
+    </div>
+
+    <!-- ── FORM BODY ── -->
+    <div class="form-body">
+
+      <!-- ▸ 1. PERSONAL INFORMATION -->
+      <div class="sec">1. Personal Information</div>
+
+      <div class="personal-wrap">
+        <div class="personal-fields">
+
+          <!-- Full Name + ID -->
+          <div class="row">
+            <span class="lbl">Full Name:</span>
+            <input class="inp" type="text" id="f_fullname" autocomplete="off" spellcheck="false"/>
+            <span class="lbl" style="margin-left:12px;">ID:</span>
+            <input class="inp inp-sm" type="text" id="f_id" autocomplete="off"/>
+          </div>
+
+          <!-- Father's Name -->
+          <div class="row">
+            <span class="lbl">Father's Name:</span>
+            <input class="inp" type="text" id="f_father" autocomplete="off" spellcheck="false"/>
+          </div>
+
+          <!-- Mother's Name -->
+          <div class="row">
+            <span class="lbl">Mother's Name:</span>
+            <input class="inp" type="text" id="f_mother" autocomplete="off" spellcheck="false"/>
+          </div>
+
+          <!-- Date of Birth -->
+          <div class="row">
+            <span class="lbl">Date of Birth:</span>
+            <input class="inp inp-md" type="text" id="f_dob" placeholder="DD / MM / YYYY" autocomplete="off"/>
+          </div>
+
+          <!-- Gender -->
+          <div class="chk-row">
+            <span class="lbl">Gender:</span>
+            <label class="chk-opt">
+              <input type="checkbox" id="g_male" onchange="excl('gender','g_male')"/> Male
+            </label>
+            <label class="chk-opt">
+              <input type="checkbox" id="g_female" onchange="excl('gender','g_female')"/> Female
+            </label>
+            <label class="chk-opt">
+              <input type="checkbox" id="g_other" onchange="excl('gender','g_other')"/> Other
+            </label>
+          </div>
+
+        </div><!-- /personal-fields -->
+
+        <!-- Photo Slot -->
+        <div class="photo-slot" id="formSlot" onclick="openPhoto()" title="Click to add photo">
+          <div class="photo-slot-txt" id="slotPlaceholder">
+            <span>Add Photo</span>
+          </div>
+          <img id="slotImg" alt="Member Photo"/>
+        </div>
+
+      </div><!-- /personal-wrap -->
+
+      <!-- ▸ 2. CONTACT INFORMATION -->
+      <div class="sec">2. Contact Information</div>
+
+      <div class="row">
+        <span class="lbl">Phone Number:</span>
+        <input class="inp" type="text" id="f_phone" autocomplete="off"/>
+      </div>
+      <div class="row">
+        <span class="lbl">Email Address:</span>
+        <input class="inp" type="text" id="f_email" autocomplete="off"/>
+      </div>
+      <div class="row">
+        <span class="lbl">Present Address:</span>
+        <input class="inp" type="text" id="f_present_addr" autocomplete="off"/>
+      </div>
+      <div class="row">
+        <span class="lbl">Permanent Address:</span>
+        <input class="inp" type="text" id="f_permanent_addr" autocomplete="off"/>
+      </div>
+
+      <!-- ▸ 3. EDUCATIONAL INFORMATION -->
+      <div class="sec">3. Educational Information</div>
+
+      <div class="row">
+        <span class="lbl">Current Institution:</span>
+        <input class="inp" type="text" id="f_institution" autocomplete="off" spellcheck="false"/>
+      </div>
+      <div class="row">
+        <span class="lbl">Class / Year:</span>
+        <input class="inp inp-md" type="text" id="f_class" autocomplete="off"/>
+      </div>
+
+      <!-- ▸ 4. CLUB RELATED INFORMATION -->
+      <div class="sec">4. Club Related Information</div>
+
+      <div class="textarea-wrap">
+        <span class="lbl">Why do you want to join Nextgen Youth Club Uttara-BD?</span>
+        <span class="blank-line"></span>
+        <textarea class="inp-area" id="f_why" rows="2" placeholder="Write here…"></textarea>
+        <span class="blank-line" style="margin-top:4px;"></span>
+      </div>
+
+      <div class="yn-row">
+        <span class="lbl">Any previous club&nbsp;/&nbsp;volunteer experience?</span>
+        <div class="yn-opts">
+          <label class="chk-opt">
+            <input type="checkbox" id="exp_yes" onchange="excl('exp','exp_yes')"/> Yes
+          </label>
+          <label class="chk-opt">
+            <input type="checkbox" id="exp_no" onchange="excl('exp','exp_no')"/> No
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <span class="lbl">If yes, details:</span>
+        <input class="inp" type="text" id="f_exp_details" autocomplete="off"/>
+      </div>
+
+      <!-- ▸ 5. AREA OF INTEREST -->
+      <div class="sec">5. Area of Interest</div>
+
+      <div class="interest-grid">
+        <label class="chk-opt"><input type="checkbox" id="i_volunteer"/> Volunteering</label>
+        <label class="chk-opt"><input type="checkbox" id="i_event"/> Event Management</label>
+        <label class="chk-opt"><input type="checkbox" id="i_leadership"/> Leadership</label>
+        <label class="chk-opt"><input type="checkbox" id="i_social"/> Social Work</label>
+        <label class="chk-opt">
+          <input type="checkbox" id="i_others"/>
+          <span style="display:flex;align-items:center;gap:4px;">
+            Others: <input class="others-inp" type="text" id="f_others_text" placeholder="specify"/>
+          </span>
+        </label>
+      </div>
+
+      <!-- ▸ 6. AVAILABILITY -->
+      <div class="sec">6. Availability</div>
+
+      <div class="yn-row" style="margin-top:6px;">
+        <span class="lbl">Are you available for regular activities?</span>
+        <div class="yn-opts">
+          <label class="chk-opt">
+            <input type="checkbox" id="av_yes" onchange="excl('avail','av_yes')"/> Yes
+          </label>
+          <label class="chk-opt">
+            <input type="checkbox" id="av_no" onchange="excl('avail','av_no')"/> No
+          </label>
+        </div>
+      </div>
+
+      <!-- ▸ TERMS AND CONDITIONS -->
+      <div class="terms-box">
+        <div class="terms-title">Terms and Conditions</div>
+        <ul class="terms-list">
+          <li>Respect all members and follow the club's rules and regulations.</li>
+          <li>Maintain a positive and constructive attitude.</li>
+          <li>Attend meetings, events, and activities regularly.</li>
+          <li>Participate actively and contribute to club activities.</li>
+          <li>Uphold the values of leadership, teamwork, and community service.</li>
+        </ul>
+      </div>
+
+      <!-- ▸ SIGNATURE / DATE -->
+      <div class="sig-row">
+        <div class="sig-field">
+          <div class="sig-line" style="width:165px;"></div>
+          <span class="sig-label">Signature</span>
+        </div>
+        <div class="sig-field">
+          <div class="sig-line" style="width:115px;"></div>
+          <span class="sig-label">Date: &nbsp;_______ / _______ / _______</span>
+        </div>
+      </div>
+
+    </div><!-- /form-body -->
+  </div><!-- /a4 -->
+
+</main><!-- /main -->
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script>
+/* ──────────────────────────────────────
+   LOGO IMAGE INJECTOR (PNG)
+────────────────────────────────────── */
+(function injectLogos() {
+  ['hdrLogo', 'fhdrLogoL', 'fhdrLogoR'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = `<img src="public/logo.png" style="width:100%;height:100%;border-radius:50%;">`;
+  });
+
+  const wm = document.getElementById('watermark');
+  if (wm) {
+    wm.innerHTML = `<img src="public/logo.png" style="width:310px;height:310px;">`;
+  }
+})();
+
+/* ──────────────────────────────────────
+   PHOTO UPLOAD
+────────────────────────────────────── */
+function openPhoto() {
+  document.getElementById('photoInput').click();
+}
+
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ({ target }) => {
+    const src = target.result;
+    // Side preview panel
+    document.getElementById('sidePlaceholder').style.display = 'none';
+    const si = document.getElementById('sideImg');
+    si.src = src; si.style.display = 'block';
+    // Form photo slot
+    document.getElementById('slotPlaceholder').style.display = 'none';
+    const fi = document.getElementById('slotImg');
+    fi.src = src; fi.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ──────────────────────────────────────
+   EXCLUSIVE CHECKBOXES (radio behaviour)
+────────────────────────────────────── */
+const exclusiveGroups = {
+  gender: ['g_male',  'g_female', 'g_other'],
+  exp:    ['exp_yes', 'exp_no'],
+  avail:  ['av_yes',  'av_no'],
+};
+function excl(group, activeId) {
+  exclusiveGroups[group].forEach(id => {
+    if (id !== activeId) document.getElementById(id).checked = false;
+  });
+}
+
+/* ──────────────────────────────────────
+   PREVIEW + DOWNLOAD (PRINT TO PDF)
+────────────────────────────────────── */
+document.getElementById('pdfBtn').addEventListener('click', () => {
+  const formEl = document.getElementById('formPaper');
+  const styleTag = document.querySelector('style');
+  const css = styleTag ? styleTag.innerHTML : '';
+
+  const preview = window.open('', '_blank', 'width=1120,height=900');
+  if (!preview) {
+    alert('Preview window blocked. Please allow pop-ups and try again.');
+    return;
+  }
+
+  preview.document.open();
+  preview.document.write(`
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+      <title>Form Preview</title>
+      <style>
+        ${css}
+        body { background: #f2f4f8; padding: 20px; }
+        .a4 { margin: 0 auto; }
+        @page { size: A4 portrait; margin: 0; }
+        @media print {
+          body { background: #fff; padding: 0; }
+          .a4 { box-shadow: none !important; }
+        }
+      </style>
+    </head>
+    <body>
+      ${formEl.outerHTML}
+      <script>
+        window.onload = function () {
+          setTimeout(function () { window.print(); }, 220);
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+  preview.document.close();
+});
+
+/* ──────────────────────────────────────
+   RESET FORM
+────────────────────────────────────── */
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (!confirm('সমস্ত তথ্য মুছে দেওয়া হবে। নিশ্চিত?')) return;
+
+  // Clear all text inputs & textareas
+  document.querySelectorAll('.form-body input[type="text"], .form-body textarea')
+    .forEach(el => { el.value = ''; });
+
+  // Uncheck all checkboxes
+  document.querySelectorAll('.form-body input[type="checkbox"]')
+    .forEach(el => { el.checked = false; });
+
+  // Reset photos
+  document.getElementById('sidePlaceholder').style.display = 'block';
+  document.getElementById('sideImg').style.display = 'none';
+  document.getElementById('sideImg').src = '';
+  document.getElementById('slotPlaceholder').style.display = 'flex';
+  document.getElementById('slotImg').style.display  = 'none';
+  document.getElementById('slotImg').src  = '';
+  document.getElementById('photoInput').value = '';
+});
+</script>
+</body>
+</html>
