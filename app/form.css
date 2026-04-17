@@ -95,10 +95,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.12;
+  opacity: 0.16;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
-.watermark img { width: 348px; filter: grayscale(65%) contrast(110%) brightness(1.02) saturate(0.95); }
+.watermark img { width: 356px; filter: contrast(126%) brightness(0.9) saturate(1.12); }
 
 /* --- Header Section --- */
 .paperHeader {
@@ -450,6 +451,6 @@ input[type="radio"] {
   }
 
   .watermark {
-    opacity: 0.08;
+    opacity: 0.12;
   }
 }

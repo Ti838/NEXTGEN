@@ -217,14 +217,15 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 340px;
-    height: 340px;
-    opacity: 0.12;
+    width: 356px;
+    height: 356px;
+    opacity: 0.16;
     pointer-events: none;
     z-index: 0;
-    filter: grayscale(8%) contrast(1.1) saturate(0.95);
+    filter: contrast(1.26) brightness(0.9) saturate(1.12);
+    mix-blend-mode: multiply;
   }
-  .watermark svg { width: 340px; height: 340px; }
+  .watermark svg { width: 356px; height: 356px; }
 
   /* all form content sits above watermark */
   .form-header, .form-body { position: relative; z-index: 1; }

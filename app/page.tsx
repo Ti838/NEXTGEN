@@ -237,8 +237,8 @@ export default function HomePage() {
           /* Form Structure */
           .paper-frame-dynamic { width: 210mm; min-height: 297mm; height: auto; background: #fff; position: relative; box-sizing: border-box; box-shadow: 0 0 30px rgba(0,0,0,0.2); overflow: hidden; }
           .paper-content { width: 210mm; height: 297mm; background: #fff; position: relative; overflow: hidden; box-sizing: border-box; display: flex; flex-direction: column; }
-          .watermark { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; opacity: 0.12; pointer-events: none; }
-          .watermark img { width: 348px; filter: grayscale(65%) contrast(110%) brightness(1.02) saturate(0.95); }
+          .watermark { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; opacity: 0.16; pointer-events: none; mix-blend-mode: multiply; }
+          .watermark img { width: 356px; filter: contrast(126%) brightness(0.9) saturate(1.12); }
           .paperHeader { background: #1a5f86 !important; padding: 10px 15px; display: grid; grid-template-columns: 60px 1fr 60px; gap: 15px; align-items: center; position: relative; z-index: 2; }
           .paperHeader .logo-wrap { width: 60px; height: 60px; background: #fff !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
           .paperHeader img { width: 85%; height: 85%; object-fit: contain; }
@@ -401,7 +401,7 @@ export default function HomePage() {
             }
 
             .watermark {
-              opacity: 0.08;
+              opacity: 0.12;
             }
           }
         </style>
