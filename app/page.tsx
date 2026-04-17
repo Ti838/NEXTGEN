@@ -246,8 +246,8 @@ export default function HomePage() {
           .sigLabel { display: block; text-align: center; font-size: 0.7rem; font-weight: 700; color: #64748b; margin-top: 5px; }
 
           @page {
-            size: auto;
-            margin: 10mm;
+            size: A4 portrait;
+            margin: 0;
           }
 
           @media print {
@@ -267,23 +267,101 @@ export default function HomePage() {
             }
 
             .paper-frame-dynamic {
-              width: 100% !important;
-              min-height: auto !important;
+              width: 210mm !important;
+              min-height: 297mm !important;
+              height: 297mm !important;
               box-shadow: none;
               border-radius: 0;
               margin: 0;
+              overflow: hidden !important;
               break-inside: avoid;
               page-break-inside: avoid;
             }
 
             .paper-content {
-              width: 100% !important;
-              height: auto !important;
-              min-height: auto !important;
+              width: 210mm !important;
+              height: 297mm !important;
+              min-height: 297mm !important;
             }
 
             .paperBody {
-              padding: 12mm 10mm 10mm !important;
+              padding: 8mm 9mm 6mm !important;
+            }
+
+            .paperHeader {
+              padding: 8px 12px !important;
+              grid-template-columns: 52px 1fr 52px !important;
+              gap: 10px !important;
+            }
+
+            .paperHeader .logo-wrap {
+              width: 52px !important;
+              height: 52px !important;
+            }
+
+            .paperHeaderTitle h1 {
+              font-size: 0.9rem !important;
+            }
+
+            .paperHeaderTitle p {
+              font-size: 0.68rem !important;
+              letter-spacing: 0.08em !important;
+            }
+
+            .section {
+              margin-bottom: 12px !important;
+            }
+
+            .sectionTitle {
+              margin-bottom: 8px !important;
+            }
+
+            .form-grid {
+              gap: 6px !important;
+            }
+
+            .form-row {
+              gap: 8px !important;
+            }
+
+            .label,
+            .choice-item,
+            .form-input,
+            .form-textarea {
+              font-size: 0.7rem !important;
+            }
+
+            .form-textarea {
+              min-height: 40px !important;
+            }
+
+            .terms-section {
+              margin-top: 10px !important;
+              padding: 8px 12px !important;
+            }
+
+            .terms-title {
+              font-size: 0.74rem !important;
+            }
+
+            .terms-list {
+              font-size: 0.66rem !important;
+              line-height: 1.45 !important;
+            }
+
+            .signature-area {
+              margin-top: 16px !important;
+              gap: 36px !important;
+              padding-right: 8px !important;
+            }
+
+            .sigLine {
+              min-width: 130px !important;
+              height: 22px !important;
+            }
+
+            .sigLabel {
+              font-size: 0.66rem !important;
             }
 
             .section,

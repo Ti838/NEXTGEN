@@ -28,6 +28,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .brand-minimal { display: flex; align-items: center; gap: 15px; }
@@ -35,7 +37,7 @@
 .brand-minimal h1 { margin: 0; font-size: 0.95rem; color: #1a3a5a; font-weight: 900; letter-spacing: 0.02em; }
 .brand-minimal p { margin: 2px 0 0; font-size: 0.72rem; color: #5f7485; font-weight: 600; }
 
-.btn-group { display: flex; gap: 12px; }
+.btn-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
 .util-btn {
   padding: 10px 18px;
   border-radius: 8px;
