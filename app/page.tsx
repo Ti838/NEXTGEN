@@ -116,49 +116,66 @@ export default function HomePage() {
     return null;
   };
 
-  const openPreview = () => {
-    const error = validateForm();
-    if (error) {
-      alert(error);
-      return;
-    }
-
+  const openPrintPreview = (isBlank: boolean) => {
     if (!formRef.current) return;
 
     setIsPreparingPrint(true);
 
     // Clone the form for preview
     const clone = formRef.current.cloneNode(true) as HTMLDivElement;
-    
-    // Sync input values (cloneNode doesn't copy current JS state of inputs)
-    const originalInputs = formRef.current.querySelectorAll('input, textarea');
-    const clonedInputs = clone.querySelectorAll('input, textarea');
-    originalInputs.forEach((orig, index) => {
-      const cloned = clonedInputs[index] as HTMLInputElement | HTMLTextAreaElement;
-      if (orig instanceof HTMLInputElement) {
-        if (orig.type === 'checkbox' || orig.type === 'radio') {
-          if (orig.checked) cloned.setAttribute('checked', 'true');
-        } else {
-          cloned.setAttribute('value', orig.value);
+
+    if (isBlank) {
+      // Reset all form controls in the clone to generate a printable blank copy.
+      const clonedInputs = clone.querySelectorAll('input, textarea');
+      clonedInputs.forEach((node) => {
+        if (node instanceof HTMLInputElement) {
+          if (node.type === 'checkbox' || node.type === 'radio') {
+            node.checked = false;
+            node.removeAttribute('checked');
+          } else {
+            node.value = '';
+            node.setAttribute('value', '');
+          }
+        } else if (node instanceof HTMLTextAreaElement) {
+          node.value = '';
+          node.textContent = '';
         }
-      } else if (orig instanceof HTMLTextAreaElement) {
-        cloned.textContent = orig.value;
+      });
+
+      const photoBox = clone.querySelector('.photo-box');
+      if (photoBox) {
+        photoBox.innerHTML = '<span>Photo</span>';
       }
-    });
+    } else {
+      // Sync current UI values because cloneNode does not copy live input state.
+      const originalInputs = formRef.current.querySelectorAll('input, textarea');
+      const clonedInputs = clone.querySelectorAll('input, textarea');
+      originalInputs.forEach((orig, index) => {
+        const cloned = clonedInputs[index] as HTMLInputElement | HTMLTextAreaElement;
+        if (orig instanceof HTMLInputElement) {
+          if (orig.type === 'checkbox' || orig.type === 'radio') {
+            if (orig.checked) cloned.setAttribute('checked', 'true');
+          } else {
+            cloned.setAttribute('value', orig.value);
+          }
+        } else if (orig instanceof HTMLTextAreaElement) {
+          cloned.textContent = orig.value;
+        }
+      });
 
-    // Inject Auto-Date for signature
-    const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const sigDateDiv = clone.querySelector('.sigBlock:last-child .sigLine');
-    if (sigDateDiv) sigDateDiv.textContent = today;
+      // Inject Auto-Date for signature
+      const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const sigDateDiv = clone.querySelector('.sigBlock:last-child .sigLine');
+      if (sigDateDiv) sigDateDiv.textContent = today;
 
-    // Add Receipt Timestamp
-    const now = new Date();
-    const timestamp = `Downloaded: ${now.toLocaleDateString()} ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-    const stampDiv = document.createElement('div');
-    stampDiv.className = 'receipt-stamp';
-    stampDiv.style.cssText = "position: absolute; bottom: 10px; right: 25px; font-size: 0.6rem; color: #9ab; font-family: monospace;";
-    stampDiv.textContent = timestamp;
-    clone.appendChild(stampDiv);
+      // Add Receipt Timestamp for filled form downloads.
+      const timestamp = `Downloaded: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      const stampDiv = document.createElement('div');
+      stampDiv.className = 'receipt-stamp';
+      stampDiv.style.cssText = 'position: absolute; bottom: 10px; right: 25px; font-size: 0.6rem; color: #9ab; font-family: monospace;';
+      stampDiv.textContent = timestamp;
+      clone.appendChild(stampDiv);
+    }
 
     // Open new print window
     const previewWindow = window.open("", "_blank", "width=1100,height=900");
@@ -168,10 +185,17 @@ export default function HomePage() {
       return;
     }
 
+    const now = new Date();
+    const dateTag = now.toISOString().slice(0, 10);
     const safeName = form.fullName.trim().replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
     const safeId = form.id.trim().replace(/\s+/g, "").replace(/[^a-zA-Z0-9_-]/g, "");
-    const dateTag = now.toISOString().slice(0, 10);
-    const fileName = `${safeName || "member"}_ID-${safeId || "NA"}_${dateTag}`;
+    const fileName = isBlank
+      ? `club_member_blank_form_${dateTag}`
+      : `${safeName || "member"}_ID-${safeId || "NA"}_${dateTag}`;
+    const previewTitle = isBlank ? 'Blank Form Ready' : 'Auto Print Ready';
+    const previewNote = isBlank
+      ? 'This is a blank copy. Use Print to save as PDF or print on paper.'
+      : 'If you cancel print, this window stays open. Use Print Again when ready.';
 
     previewWindow.document.open();
     previewWindow.document.write(`
@@ -287,8 +311,8 @@ export default function HomePage() {
         <div class="preview-shell">
           <div class="preview-controls">
             <div>
-              <div style="font-weight: 800; color: #1a5f86;">Auto Print Ready</div>
-              <div class="preview-note">If you cancel print, this window stays open. Use Print Again when ready.</div>
+              <div style="font-weight: 800; color: #1a5f86;">${previewTitle}</div>
+              <div class="preview-note">${previewNote}</div>
             </div>
             <button class="print-btn" onclick="window.print()">Print Again</button>
           </div>
@@ -325,6 +349,20 @@ export default function HomePage() {
     }, 1800);
   };
 
+  const openPreview = () => {
+    const error = validateForm();
+    if (error) {
+      alert(error);
+      return;
+    }
+
+    openPrintPreview(false);
+  };
+
+  const downloadBlankForm = () => {
+    openPrintPreview(true);
+  };
+
   if (!isClient) return null;
 
   return (
@@ -344,6 +382,14 @@ export default function HomePage() {
               <label htmlFor="photo-main" className="util-btn upload">Upload Photo</label>
               <input id="photo-main" type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePhotoUpload} />
             </div>
+            <button
+              className="util-btn blank"
+              onClick={downloadBlankForm}
+              disabled={isPreparingPrint}
+              style={{ opacity: isPreparingPrint ? 0.7 : 1, cursor: isPreparingPrint ? 'wait' : 'pointer' }}
+            >
+              Blank Form PDF
+            </button>
             <button
               className="util-btn download"
               onClick={openPreview}

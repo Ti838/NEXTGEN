@@ -49,6 +49,7 @@
 }
 .util-btn.reset { background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; }
 .util-btn.upload { background: #1a5f86; color: #fff; }
+.util-btn.blank { background: #eef4ff; color: #1a3a5a; border: 1px solid #c7d7ef; }
 .util-btn.download { background: #0d9f9f; color: #fff; box-shadow: 0 4px 12px rgba(13,159,159,0.25); }
 .util-btn:hover { transform: translateY(-1px); opacity: 0.9; }
 
