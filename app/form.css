@@ -346,3 +346,76 @@
     padding-right: 0;
   }
 }
+
+@page {
+  size: auto;
+  margin: 10mm;
+}
+
+@media print {
+  html,
+  body {
+    width: 100%;
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .utility-header,
+  .dev-footer,
+  .btn-group,
+  .upload-wrapper {
+    display: none !important;
+  }
+
+  .utility-wrapper,
+  .form-main-area {
+    min-height: auto;
+    background: #fff !important;
+    padding: 0;
+    margin: 0;
+  }
+
+  .paper-frame-dynamic {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .paper-content {
+    width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible;
+  }
+
+  .paperBody {
+    padding: 12mm 10mm 10mm !important;
+  }
+
+  .section,
+  .personal-layout,
+  .terms-section,
+  .signature-area {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .form-input,
+  .form-textarea,
+  .sigLine {
+    color: #111 !important;
+    border-color: #6b7280 !important;
+  }
+
+  .watermark {
+    opacity: 0.03;
+  }
+}

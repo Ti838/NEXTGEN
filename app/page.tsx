@@ -59,6 +59,7 @@ const initialState: FormState = {
 export default function HomePage() {
   const [form, setForm] = useState<FormState>(initialState);
   const [photo, setPhoto] = useState<string>("");
+  const [isPreparingPrint, setIsPreparingPrint] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false);
 
@@ -124,6 +125,8 @@ export default function HomePage() {
 
     if (!formRef.current) return;
 
+    setIsPreparingPrint(true);
+
     // Clone the form for preview
     const clone = formRef.current.cloneNode(true) as HTMLDivElement;
     
@@ -160,11 +163,15 @@ export default function HomePage() {
     // Open new print window
     const previewWindow = window.open("", "_blank", "width=1100,height=900");
     if (!previewWindow) {
+      setIsPreparingPrint(false);
       alert("Please allow pop-ups to view the PDF.");
       return;
     }
 
-    const fileName = `${form.fullName.replace(/\s+/g, '_')}_ID-${form.id}`;
+    const safeName = form.fullName.trim().replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "");
+    const safeId = form.id.trim().replace(/\s+/g, "").replace(/[^a-zA-Z0-9_-]/g, "");
+    const dateTag = now.toISOString().slice(0, 10);
+    const fileName = `${safeName || "member"}_ID-${safeId || "NA"}_${dateTag}`;
 
     previewWindow.document.open();
     previewWindow.document.write(`
@@ -173,7 +180,6 @@ export default function HomePage() {
       <head>
         <meta charset="utf-8" />
         <title>${fileName}</title>
-        <title>${fileName}</title>
         <style>
           /* ═══════════════════════════════════════════════
              INJECTED MASTER FORM STYLES FOR PRINT PARITY
@@ -181,6 +187,7 @@ export default function HomePage() {
           body { margin: 0; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; font-family: 'Inter', sans-serif; }
           .preview-shell { padding: 40px 0; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
           .preview-controls { width: 210mm; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: #fff; padding: 20px 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+          .preview-note { font-size: 0.78rem; color: #64748b; margin-top: 6px; }
           .print-btn { background: #0d9f9f; color: #fff; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 1rem; }
           
           /* Form Structure */
@@ -214,26 +221,108 @@ export default function HomePage() {
           .sigLine { border-bottom: 1.8px solid #1a3a5a; min-width: 150px; height: 28px; display: flex; align-items: flex-end; justify-content: center; font-size: 0.75rem; color: #1e293b; padding-bottom: 2px; }
           .sigLabel { display: block; text-align: center; font-size: 0.7rem; font-weight: 700; color: #64748b; margin-top: 5px; }
 
-          @page { size: A4 portrait; margin: 0; }
+          @page {
+            size: auto;
+            margin: 10mm;
+          }
+
           @media print {
+            html, body {
+              width: 100%;
+              background: #fff !important;
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+
             .preview-controls { display: none !important; }
-            .preview-shell { padding: 0; background: #fff; }
-            .paper-frame-dynamic { box-shadow: none; border-radius: 0; }
+            .preview-shell {
+              padding: 0;
+              background: #fff;
+              min-height: auto;
+              display: block;
+            }
+
+            .paper-frame-dynamic {
+              width: 100% !important;
+              min-height: auto !important;
+              box-shadow: none;
+              border-radius: 0;
+              margin: 0;
+              break-inside: avoid;
+              page-break-inside: avoid;
+            }
+
+            .paper-content {
+              width: 100% !important;
+              height: auto !important;
+              min-height: auto !important;
+            }
+
+            .paperBody {
+              padding: 12mm 10mm 10mm !important;
+            }
+
+            .section,
+            .personal-layout,
+            .terms-section,
+            .signature-area {
+              break-inside: avoid;
+              page-break-inside: avoid;
+            }
+
+            .form-input,
+            .form-textarea,
+            .sigLine {
+              color: #111 !important;
+              border-color: #6b7280 !important;
+            }
+
+            .watermark {
+              opacity: 0.03;
+            }
           }
         </style>
       </head>
       <body>
         <div class="preview-shell">
           <div class="preview-controls">
-            <span style="font-weight: 800; color: #1a5f86;">Premium Digital Receipt</span>
-            <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+            <div>
+              <div style="font-weight: 800; color: #1a5f86;">Auto Print Ready</div>
+              <div class="preview-note">If you cancel print, this window stays open. Use Print Again when ready.</div>
+            </div>
+            <button class="print-btn" onclick="window.print()">Print Again</button>
           </div>
           ${clone.outerHTML}
         </div>
+        <script>
+          let printedOnce = false;
+
+          const triggerAutoPrint = () => {
+            if (printedOnce) return;
+            printedOnce = true;
+
+            setTimeout(() => {
+              window.print();
+            }, 250);
+          };
+
+          window.addEventListener('load', triggerAutoPrint, { once: true });
+        </script>
       </body>
       </html>
     `);
     previewWindow.document.close();
+
+    const closeCheck = window.setInterval(() => {
+      if (previewWindow.closed) {
+        window.clearInterval(closeCheck);
+        setIsPreparingPrint(false);
+      }
+    }, 400);
+
+    window.setTimeout(() => {
+      setIsPreparingPrint(false);
+    }, 1800);
   };
 
   if (!isClient) return null;
@@ -255,8 +344,13 @@ export default function HomePage() {
               <label htmlFor="photo-main" className="util-btn upload">Upload Photo</label>
               <input id="photo-main" type="file" accept="image/*" style={{ display: 'none' }} onChange={handlePhotoUpload} />
             </div>
-            <button className="util-btn download" onClick={openPreview}>
-              View & Download PDF
+            <button
+              className="util-btn download"
+              onClick={openPreview}
+              disabled={isPreparingPrint}
+              style={{ opacity: isPreparingPrint ? 0.7 : 1, cursor: isPreparingPrint ? 'wait' : 'pointer' }}
+            >
+              {isPreparingPrint ? "Preparing..." : "Auto Print / Save PDF"}
             </button>
           </div>
         </div>
