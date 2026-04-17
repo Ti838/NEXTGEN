@@ -219,10 +219,10 @@
     transform: translate(-50%, -50%);
     width: 310px;
     height: 310px;
-    opacity: 0.065;
+    opacity: 0.085;
     pointer-events: none;
     z-index: 0;
-    filter: grayscale(20%) saturate(0.8);
+    filter: grayscale(10%) contrast(1.05) saturate(0.92);
   }
   .watermark svg { width: 310px; height: 310px; }
 
@@ -504,10 +504,10 @@
     </div>
 
     <div class="upload-info">
-      <strong>Passport size</strong> ছবি আপলোড করো<br/>
-      ✅ ছবি স্বয়ংক্রিয়ভাবে form-এর জায়গায় fit হবে<br/>
-      ✅ মুখ স্পষ্ট, সামনে দিকে তাকানো ছবি দাও<br/>
-      ✅ JPG, PNG অথবা WEBP ফরম্যাট
+      <strong>Upload a passport-size photo</strong><br/>
+      - The image will be automatically fitted into the form photo area.<br/>
+      - Use a clear, front-facing portrait photo.<br/>
+      - Supported formats: JPG, PNG, or WEBP.
     </div>
 
     <button class="btn-choose" onclick="openPhoto()">Choose Photo</button>
@@ -702,7 +702,7 @@
         </div>
         <div class="sig-field">
           <div class="sig-line" style="width:115px;"></div>
-          <span class="sig-label">Date: &nbsp;_______ / _______ / _______</span>
+          <span class="sig-label">Date</span>
         </div>
       </div>
 
@@ -818,7 +818,7 @@ document.getElementById('pdfBtn').addEventListener('click', () => {
    RESET FORM
 ────────────────────────────────────── */
 document.getElementById('resetBtn').addEventListener('click', () => {
-  if (!confirm('সমস্ত তথ্য মুছে দেওয়া হবে। নিশ্চিত?')) return;
+  if (!confirm('All entered data will be cleared. Are you sure?')) return;
 
   // Clear all text inputs & textareas
   document.querySelectorAll('.form-body input[type="text"], .form-body textarea')

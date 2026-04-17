@@ -151,31 +151,16 @@ export default function HomePage() {
 
       const blankSig = clone.querySelector('.sigBlock:first-child .sigLine') as HTMLDivElement | null;
       if (blankSig) {
-        blankSig.textContent = 'Applicant Signature';
-        blankSig.classList.add('placeholder');
+        blankSig.textContent = '';
+        blankSig.classList.remove('placeholder');
       }
 
       const blankDate = clone.querySelector('.sigBlock:last-child .sigLine') as HTMLDivElement | null;
       if (blankDate) {
-        blankDate.textContent = 'DD / MM / YYYY';
-        blankDate.classList.add('placeholder');
+        blankDate.textContent = '';
+        blankDate.classList.remove('placeholder');
       }
 
-      const termsSection = clone.querySelector('.terms-section');
-      if (termsSection) {
-        const officeUse = document.createElement('div');
-        officeUse.className = 'office-use-section';
-        officeUse.innerHTML = `
-          <div class="office-use-title">For Office Use Only</div>
-          <div class="office-grid">
-            <div class="office-field"><span>Application No:</span><div class="office-line"></div></div>
-            <div class="office-field"><span>Received Date:</span><div class="office-line"></div></div>
-            <div class="office-field"><span>Verified By:</span><div class="office-line"></div></div>
-            <div class="office-field"><span>Membership Status:</span><div class="office-line"></div></div>
-          </div>
-        `;
-        termsSection.insertAdjacentElement('afterend', officeUse);
-      }
     } else {
       // Sync current UI values because cloneNode does not copy live input state.
       const originalInputs = formRef.current.querySelectorAll('input, textarea');
@@ -200,8 +185,7 @@ export default function HomePage() {
 
       const sigNameDiv = clone.querySelector('.sigBlock:first-child .sigLine') as HTMLDivElement | null;
       if (sigNameDiv) {
-        sigNameDiv.textContent = 'Member Signature';
-        sigNameDiv.classList.add('placeholder');
+        sigNameDiv.classList.remove('placeholder');
       }
 
       // Add Receipt Timestamp for filled form downloads.
@@ -253,15 +237,15 @@ export default function HomePage() {
           /* Form Structure */
           .paper-frame-dynamic { width: 210mm; min-height: 297mm; height: auto; background: #fff; position: relative; box-sizing: border-box; box-shadow: 0 0 30px rgba(0,0,0,0.2); overflow: hidden; }
           .paper-content { width: 210mm; height: 297mm; background: #fff; position: relative; overflow: hidden; box-sizing: border-box; display: flex; flex-direction: column; }
-          .watermark { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; opacity: 0.055; pointer-events: none; }
-          .watermark img { width: 340px; filter: grayscale(100%) contrast(82%); transform: translateY(5mm); }
+          .watermark { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; opacity: 0.085; pointer-events: none; }
+          .watermark img { width: 320px; filter: grayscale(100%) contrast(92%) brightness(1.03); }
           .paperHeader { background: #1a5f86 !important; padding: 10px 15px; display: grid; grid-template-columns: 60px 1fr 60px; gap: 15px; align-items: center; position: relative; z-index: 2; }
           .paperHeader .logo-wrap { width: 60px; height: 60px; background: #fff !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
           .paperHeader img { width: 85%; height: 85%; object-fit: contain; }
           .paperHeaderTitle { text-align: center; }
           .paperHeaderTitle h1 { margin: 0; color: #fff !important; font-size: 1rem; font-weight: 900; letter-spacing: 0.03em; }
           .paperHeaderTitle p { margin: 2px 0 0; color: #f5d98f !important; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; }
-          .paperBody { padding: 15px 30px 20px; position: relative; z-index: 2; flex-grow: 1; }
+          .paperBody { padding: 15px 30px 20px; position: relative; z-index: 2; flex-grow: 1; display: flex; flex-direction: column; }
           .section { margin-bottom: 20px; }
           .sectionTitle { background: #1a5f86 !important; color: #fff !important; padding: 5px 15px; font-size: 0.8rem; font-weight: 800; border-radius: 4px; display: block; text-transform: uppercase; margin-bottom: 12px; }
           .personal-layout { display: grid; grid-template-columns: 1fr auto; gap: 20px; }
@@ -277,17 +261,9 @@ export default function HomePage() {
           .terms-section { margin-top: 15px; border: 1.2px dashed #94a3b8; padding: 10px 15px; border-radius: 8px; background: #f8fafc !important; }
           .terms-title { font-size: 0.78rem; font-weight: 800; color: #1a5f86; margin-bottom: 4px; text-decoration: underline; }
           .terms-list { margin: 0; padding-left: 20px; font-size: 0.7rem; color: #475569; line-height: 1.6; }
-          .signature-area { margin-top: 30px; display: flex; justify-content: flex-end; gap: 50px; padding-right: 20px; }
+          .signature-area { margin-top: auto; padding-top: 18px; display: flex; justify-content: flex-end; gap: 50px; padding-right: 20px; }
           .sigLine { border-bottom: 1.8px solid #1a3a5a; min-width: 150px; height: 28px; display: flex; align-items: flex-end; justify-content: center; font-size: 0.75rem; color: #1e293b; padding-bottom: 2px; }
           .sigLabel { display: block; text-align: center; font-size: 0.7rem; font-weight: 700; color: #64748b; margin-top: 5px; }
-          .sigLine.placeholder { border-bottom-style: dashed; color: #64748b; font-size: 0.66rem; font-style: italic; }
-
-          .office-use-section { margin-top: 12px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; background: #f7fbff !important; }
-          .office-use-title { font-size: 0.7rem; font-weight: 800; color: #1a5f86; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.04em; }
-          .office-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
-          .office-field { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 6px; }
-          .office-field span { font-size: 0.66rem; color: #334155; font-weight: 700; }
-          .office-line { border-bottom: 1px solid #94a3b8; min-height: 14px; }
 
           @page {
             size: A4 portrait;
@@ -393,35 +369,9 @@ export default function HomePage() {
               line-height: 1.45 !important;
             }
 
-            .office-use-section {
-              margin-top: 8px !important;
-              padding: 6px 8px !important;
-            }
-
-            .office-use-title {
-              font-size: 0.66rem !important;
-              margin-bottom: 4px !important;
-            }
-
-            .office-grid {
-              gap: 4px 10px !important;
-            }
-
-            .office-field {
-              grid-template-columns: 95px 1fr !important;
-              gap: 5px !important;
-            }
-
-            .office-field span {
-              font-size: 0.62rem !important;
-            }
-
-            .office-line {
-              min-height: 12px !important;
-            }
-
             .signature-area {
-              margin-top: 16px !important;
+              margin-top: auto !important;
+              padding-top: 10px !important;
               gap: 36px !important;
               padding-right: 8px !important;
             }
@@ -451,7 +401,7 @@ export default function HomePage() {
             }
 
             .watermark {
-              opacity: 0.04;
+              opacity: 0.055;
             }
           }
         </style>
@@ -631,7 +581,7 @@ export default function HomePage() {
               <div className="section">
                 <h3 className="sectionTitle">4. Club Information</h3>
                 <div className="form-grid">
-                  <div className="form-row"><span className="label">Why joining?</span></div>
+                  <div className="form-row"><span className="label">Purpose of Joining:</span></div>
                   <textarea className="form-textarea" rows={2} value={form.whyJoin} onChange={(e) => update("whyJoin", e.target.value)} />
                   <div className="choice-row">
                     <span className="label">Previous Experience?</span>
